@@ -64,6 +64,23 @@ class CardsInCollection(APIView):
         serializer = CardSerializer(flashcards, many=True)
         return Response(serializer.data)
 
-    def post(self, request, fk):
-        serializer = CardSerializer(data=request.data)
-        
+
+class CardModifier(APIView):
+
+    def get_card(self, pk):
+        try:
+            return Card.objects.get(pk=pk)
+        except Card.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, collection_id):
+        card = self.get_card(pk)
+        serializer = CardSerializer(card)
+        return Response(serializer.data)
+
+
+
+
+
+
+
