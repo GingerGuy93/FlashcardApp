@@ -74,11 +74,22 @@ class CardModifier(APIView):
             raise Http404
 
     def get(self, request, pk, collection_id):
-        card = self.get_card(pk)
-        serializer = CardSerializer(card)
+        flashcard = self.get_card(pk)
+        serializer = CardSerializer(flashcard)
         return Response(serializer.data)
 
+    def put(self, request, pk, collection_id):
+        flashcard = self.get_card(pk)
+        serializer = CardSerializer(flashcard, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, pk, collection_id):
+        flashcard = self.get_card(pk)
+        flashcard.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
