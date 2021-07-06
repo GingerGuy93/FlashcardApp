@@ -22,11 +22,14 @@ const Collection = (props) => {
                 <ul>
                 {collections && collections.map(collection => {
                     return <li><td>{collection.name}
-                    <Button variant="success">Button</Button></td></li>
+                    <Button variant="success">View Collection</Button></td></li>
                 })}
                 </ul>
                </tbody>
            </Table>
+           <div className="createCollection">
+               <h2>Create A New Collection</h2>
+           </div>
         </div>
     );
 }
