@@ -43,18 +43,17 @@ class CollectionDetails(APIView):
 
 
 class FlashcardList(APIView):
-
-    def get(self, request):
-        flashcard = Card.objects.all()
-        serializer = CardSerializer(flashcard, many=True)
+    def get(self, request, fk):
+        cards = Card.objects.filter(collection_id=fk)
+        serializer = CardSerializer(cards, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = CardSerializer(data=request.data)
+    def post(self, request, fk):
+        serializer = CardSerializer(data={**request.data, 'collection': fk})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CardsInCollection(APIView):
