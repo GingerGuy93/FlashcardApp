@@ -5,27 +5,27 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import Form from "react-bootstrap/Form";
 
-const CreateFlashcard = (props) => {
-    const {values, handleChange, handleSubmit} = useForm(addCard);
+const EditFlashcard = (props) => {
+    const {values, handleChange, handleSubmit} = useForm(editCard);
     const [show, setShow] = useState(false);
-    const[add, setAdd] = useState(false);
+    const [edit, setEdit] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow  = () => setShow(true);
 
-    async function addCard(collectionId) {
-        let cards = {...values};
-        try{
-            await axios.post(`http://127.0.0.1:8000/cards/${props.collectionId}`, cards);
-            setAdd(true);
+    async function editCard() {
+        let cards  ={...values};
+        try {
+            await axios.put(`http://127.0.0.1:8000/collection/cards/${props.collectionId}/${props.flashcardId}`, cards)
+            setEdit(true);
             props.refresh()
         } catch (err) {
-            return
         }
     }
+
     return (
         <>
-            <Button variant="success" onClick={handleShow}>
-                Add A New Flashcard
+            <Button variant="primary" onClick={handleShow}>
+                Edit
             </Button>
 
             <Modal
@@ -35,7 +35,7 @@ const CreateFlashcard = (props) => {
                 keyboard={false}
             >
                 <Modal.Header>
-                    <Modal.Title>Enter the title and description of your new flashcard </Modal.Title>
+                    <Modal.Title>Enter the title and description of your edited flashcard </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
@@ -53,11 +53,11 @@ const CreateFlashcard = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    {add ? <p className='text-center'>Submit</p> : <Button type='submit' variant="primary">Submit</Button>}
+                    {edit ? <p className='text-center'>Submit</p> : <Button type='submit' variant="primary">Submit</Button>}
                 </Modal.Footer>
             </Modal>
         </>
     )
 }
 
-export default CreateFlashcard;
+export default EditFlashcard;

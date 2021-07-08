@@ -3,11 +3,15 @@ import axios from "axios";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import EditFlashcard from "./editFlashcard";
 
 const Flashcards = (props) => {
     const [flashcard, setFlashcard] = useState([]);
     const [index, setIndex] = useState(0);
 
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     useEffect(() => {getFlashcards(props.collectionId)}, [])
 
@@ -35,7 +39,7 @@ const Flashcards = (props) => {
 
     let deleteFlashcard = async (collectionId, flashcardId) => {
         try {
-            await axios.delete(`collection/cards/${collectionId}/${flashcardId}`);
+            await axios.delete(`http://127.0.0.1:8000/collection/cards/${collectionId}/${flashcardId}`);
             nextFlashcard();
             await getFlashcards(props.collectionId);
         }
@@ -45,6 +49,17 @@ const Flashcards = (props) => {
 
     return (
         <>
+            <Button variant="primary" onClick={handleShow}>
+                View Flashcards
+            </Button>
+
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Body>
             <Card>
                 <Card.Body>
                     <Card.Title>
@@ -57,6 +72,9 @@ const Flashcards = (props) => {
                         <div className="col text-right">
                             <Button variant="danger" onClick={() => deleteFlashcard(props.collectionId, props.flashcardId)}>
                                 Delete
+                            </Button>
+                            <Button variant="info" onClick={() => EditFlashcard(props.collectionId, props.flashcardId)}>
+                                Edit
                             </Button>
                         </div>
                     </div>
@@ -78,6 +96,11 @@ const Flashcards = (props) => {
                     </div>
                 </div>
             </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                </Modal.Footer>
+            </Modal>
         </>
     )
 }
