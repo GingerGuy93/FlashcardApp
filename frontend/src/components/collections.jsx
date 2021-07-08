@@ -3,15 +3,25 @@ import axios from 'axios';
 import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
 import CreateCollection from "./createCollection";
-import Flashcards from "./flashcards";
-import CreateFlashcard from "./createFlashcard";
+import Flashcards from "./flashcards.jsx";
+import CreateFlashcard from "./createFlashcard.jsx";
 
 const Collection = (props) => {
     const [collections, setCollections] = useState(null);
 
-    useEffect(() => {
-        axios.get('http://127.0.0.1:8000/collection/').then(response => setCollections(response.data)
-        )}, []);
+    useEffect(()=> {
+        getCollection()}, [])
+
+
+    async function getCollection() {
+        try {
+        let response = await axios.get('http://127.0.0.1:8000/collection/')
+            console.log(response.data)
+            setCollections(response.data)
+        } catch (err) {
+         console.log("API Unsuccessful", err)
+        }
+    }
 
     return (
         <div className="collections">
